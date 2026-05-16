@@ -78,6 +78,23 @@ def _handle_command(agent: GokilAgent, line: str) -> bool:
         else:
             agent.set_lang(arg)
             console.print(f"[dim]lang →[/] [bold]{arg}[/]")
+    elif cmd in ("/wild", "/calm", "/mode"):
+        if cmd == "/wild":
+            agent.set_mode("wild")
+            console.print(
+                "[bold magenta]🌀 wild mode ON[/] — divergent thinking, weirdness budget+, "
+                f"temp={agent.config.temperature}"
+            )
+        elif cmd == "/calm":
+            agent.set_mode("calm")
+            console.print(
+                f"[dim]calm mode ON — balanced explorer, temp={agent.config.temperature}[/]"
+            )
+        else:  # /mode
+            console.print(
+                f"[dim]current mode:[/] [bold]{agent.mode}[/] "
+                f"(temp={agent.config.temperature})"
+            )
     else:
         print_error(f"unknown command: {cmd}. ketik /help")
     return True
@@ -114,10 +131,13 @@ def main(argv: Optional[List[str]] = None) -> None:
     parser.add_argument("--lang", default=None, choices=["id", "en", "mix"], help="Persona language.")
     parser.add_argument("--max-steps", type=int, default=None, help="Max ReAct steps per turn.")
     parser.add_argument("--safe", action="store_true", help="Disable dangerous tools (shell, write_file, python_exec).")
+    parser.add_argument("--wild", action="store_true", help="Start in wild mode (divergent thinking).")
     parser.add_argument("--version", action="version", version=f"gokil {__version__}")
     args = parser.parse_args(argv)
 
     agent = _build_agent(args)
+    if args.wild:
+        agent.set_mode("wild")
 
     if args.prompt:
         prompt = " ".join(args.prompt)

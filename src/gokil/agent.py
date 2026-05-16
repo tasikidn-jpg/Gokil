@@ -27,6 +27,8 @@ class GokilAgent:
         self.registry = registry or default_registry()
         self.llm = LLMClient(self.config)
         self.history: List[Dict] = []
+        self.mode: str = "calm"  # "calm" | "wild"
+        self._base_temperature: float = self.config.temperature
 
         self.on_thought = on_thought or (lambda s: None)
         self.on_tool_call = on_tool_call or (lambda n, a: None)
@@ -44,7 +46,9 @@ class GokilAgent:
         self.history = [
             {
                 "role": "system",
-                "content": system_prompt(self.config.lang, self._tools_summary()),
+                "content": system_prompt(
+                    self.config.lang, self._tools_summary(), mode=self.mode
+                ),
             }
         ]
 
@@ -53,13 +57,28 @@ class GokilAgent:
 
     def set_lang(self, lang: str) -> None:
         self.config.lang = lang
-        # rewrite the system prompt while keeping the rest of the history
-        rest = [m for m in self.history if m.get("role") != "system"]
-        self._init_system()
-        self.history.extend(rest)
+        self._refresh_system_prompt()
 
     def set_model(self, model: str) -> None:
         self.config.model = model
+
+    def set_mode(self, mode: str) -> None:
+        """Switch between 'calm' (default) and 'wild' (divergent thinking on)."""
+        if mode not in ("calm", "wild"):
+            raise ValueError("mode must be 'calm' or 'wild'")
+        self.mode = mode
+        # Bump temperature in wild mode to encourage divergent sampling.
+        if mode == "wild":
+            self.config.temperature = min(1.2, self._base_temperature + 0.4)
+        else:
+            self.config.temperature = self._base_temperature
+        self._refresh_system_prompt()
+
+    def _refresh_system_prompt(self) -> None:
+        """Rebuild the system prompt while keeping conversation history intact."""
+        rest = [m for m in self.history if m.get("role") != "system"]
+        self._init_system()
+        self.history.extend(rest)
 
     # ---------- the ReAct loop ----------
 

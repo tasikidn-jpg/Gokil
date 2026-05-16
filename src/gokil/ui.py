@@ -45,6 +45,9 @@ def print_help() -> None:
         "[bold cyan]/clear[/]   — clear conversation history\n"
         "[bold cyan]/model[/] [italic]<name>[/]  — switch model\n"
         "[bold cyan]/lang[/] [italic]id|en|mix[/] — switch persona language\n"
+        "[bold magenta]/wild[/]    — enable wild mode (divergent thinking, temp boost)\n"
+        "[bold cyan]/calm[/]    — back to calm mode (balanced explorer)\n"
+        "[bold cyan]/mode[/]    — show current mode\n"
         "[bold cyan]/exit[/]    — quit"
     )
     console.print(Panel(body, title="Commands", border_style="cyan"))

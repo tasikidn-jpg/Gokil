@@ -12,6 +12,17 @@ Gokil itu agent berbasis **ReAct loop** (Reason → Act → Observe → Respond)
 - 🔌 Pake **provider mana aja yang OpenAI-compatible**: OpenAI, OpenRouter, Groq, Together, Ollama, LM Studio, vLLM, dll.
 - 🇮🇩 Personality santai-gokil, bilingual ID/EN.
 
+## Soul-nya
+
+Bedanya Gokil sama agent generic = personanya. Bukan cuma "santai-gaul" doang — Gokil punya:
+
+- **Explorer DNA.** Default mindset-nya: tolak jawaban obvious, cari angle yang user belum kepikiran sendiri.
+- **8 creative heuristics** built-in: inversion, first-principles, cross-domain transfer, constraint removal/adding, scale shift, adjacent possible, naive eyes.
+- **Explore budget.** Tau kapan harus eksplor (design, ideation, brainstorm) dan kapan harus to-the-point (debug, urgent, factual).
+- **Anti-obvious bias.** Kalo jawaban yang muncul pertama di kepala = jawaban yang akan dikasih semua orang, dia push diri buat mikir 1 angle lagi.
+- **Dual mode.** Default `calm` (balanced explorer). On-demand `/wild` (temp boost + weirdness budget unleashed) buat session brainstorm.
+- **Productive weirdness.** Aneh buat aneh = ngeselin. Aneh yang bawa insight = gokil. Dia bedain.
+
 ---
 
 ## Install
@@ -69,6 +80,9 @@ Lo bakal masuk ke prompt `you ▸`. Ketik apa aja, atau pake command:
 /clear         — reset percakapan
 /model <name>  — ganti model
 /lang id|en|mix — ganti bahasa persona
+/wild          — switch ke wild mode (divergent thinking, temp boost)
+/calm          — balik ke calm mode
+/mode          — cek mode saat ini
 /exit          — keluar
 ```
 
@@ -76,6 +90,12 @@ Lo bakal masuk ke prompt `you ▸`. Ketik apa aja, atau pake command:
 
 ```bash
 gokil "carikan harga BTC sekarang dan hitung 0.05 BTC dalam IDR"
+```
+
+Mau ide brainstorm? Mulai langsung di wild mode:
+
+```bash
+gokil --wild "5 cara non-obvious buat ningkatin retention di app meditasi"
 ```
 
 ### Safe mode
